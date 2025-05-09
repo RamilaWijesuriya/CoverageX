@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --radius: 1.25rem;
+  --primary: #6C63FF;
+  --surface: rgba(255,255,255,0.85);
+  --backdrop: rgba(0,0,0,0.4);
+  --text: #2D2D2D;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #f0f0ff, #dcdcff);
+  overflow: auto;
+  padding: 2rem;
+  /* REMOVE center alignment */
+  display: block; /* or remove 'display' entirely */
+}
+
+.app {
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius);
+  padding: 3rem 2.5rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+
+  width: 82vw;        /* Use viewport width */
+  max-width: none;    /* Disable default limits */
+  margin: 0 auto;     /* Optional: center horizontally */
+
+  min-height: 82vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  max-height: 82vh;     /* cap vertical size */
+  overflow-y: auto;     /* scroll vertically when content overflows */
+  overflow-x: hidden;
+}
+
+.header h1 {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 2.25rem;
+  margin-bottom: 2rem;
+}
+
+.task-list {
+  list-style: none;
+  display: flex;               /* ← switch to flex */
+  flex-direction: column;      /* ← stack vertically */
+  gap: 0.8rem;                 /* ← fixed space between cards */
+  margin-top: 1rem;
+  padding: 0;
+  width: 100%;
+}
+
+/* 2. Smoother card entrance and hover */
+.task-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;    /* vertical centering */
+  align-items: flex-start;    /* left-align children */
+  text-align: left;           /* ensure text is left-aligned */
+  height: 80px;               /* ← fixed height */
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 1.25rem;
+  padding: 1.75rem 2.25rem;
+  overflow: hidden;               /* ← clip the liquid blob */
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+  will-change: transform, opacity;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.5s ease-in-out;
+  animation: popFade 0.8s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+/* refined pop-in */
+@keyframes popFade {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* gentler hover lift */
+.task-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.1),
+    0 8px 16px rgba(0,0,0,0.08);
+}
+
+/* 3. Liquid blob morph slower & smoother */
+.task-card::after {
+  animation: blob 8s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes blob {
+  0%,100% {
+    transform: translate(0,0) scale(1);
+    border-radius: 45% 55% 55% 45% / 45% 45% 55% 55%;
+  }
+  25% {
+    transform: translate(5%, -5%) scale(1.05);
+    border-radius: 55% 45% 45% 55% / 55% 55% 45% 45%;
+  }
+  50% {
+    transform: translate(-5%, 5%) scale(0.95);
+    border-radius: 45% 55% 55% 45% / 55% 45% 45% 55%;
+  }
+  75% {
+    transform: translate(5%, 5%) scale(1.03);
+    border-radius: 55% 45% 55% 45% / 45% 55% 45% 55%;
+  }
+}
+
+
+.btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+
+  /* reduced text size */
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+
+  /* glassy gradient + border */
+  background: linear-gradient(135deg, #6b5ce7, #4f3bbd);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.2);
+
+  /* layering shadows */
+  box-shadow:
+    0 12px 24px rgba(0,0,0,0.08),
+    0 4px 8px   rgba(0,0,0,0.12);
+
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  /* ripple micro-interaction prep */
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.4s ease-in-out;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 32px rgba(0,0,0,0.10),
+    0 6px 12px rgba(0,0,0,0.14),
+    0 0 12px rgba(107, 92, 231, 0.6),
+    0 0 24px rgba(79, 59, 189, 0.4);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 6px 12px rgba(0,0,0,0.06),
+    0 2px 4px  rgba(0,0,0,0.08);
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(255,255,255,0.3);
+  border-radius: inherit;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.4s ease-out, opacity 0.6s ease-out;
+}
+
+.btn:active::after {
+  transform: scale(1.5);
+  opacity: 1;
+  transition: 0s;
+}
+
+
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--backdrop);
+  z-index: 10;
+}
+.modal-content {
+  
+  position: fixed;
+  top: 50%; left: 60%;
+  transform: translate(-50%, -50%);
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: var(--radius);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+  z-index: 11;
+  width: 100%; max-width: 400px;
+  display: flex; flex-direction: column; gap: 1rem;
+}
+.modal-input, .modal-textarea {
+  width: 100%; padding: 0.75rem; border-radius: var(--radius); border: 1px solid #ccc; font-size: 1rem;
+}
